@@ -1,20 +1,34 @@
-import { useEffect, useState } from "react";
-import api from "../services/api";
+import { useEffect, useState } from 'react';
+import api from '../services/api';
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+}
+
+interface ApiResponse {
+  success: boolean;
+  message: string;
+  data: Product[];
+}
 
 function Products() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const response = await api.get("/test");
+        const response = await api.get<ApiResponse>('/test');
+
+        console.log('API RESPONSE:', response.data);
 
         setProducts(response.data.data);
       } catch (error) {
-        console.error(error);
-        setError("Failed to load data from API");
+        console.error('API ERROR:', error);
+        setError('Failed to load data from API');
       } finally {
         setLoading(false);
       }
